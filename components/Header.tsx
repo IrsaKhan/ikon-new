@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Playfair_Display, Archivo_Narrow } from 'next/font/google';
+import { Playfair_Display, Archivo_Narrow , Tenor_Sans} from 'next/font/google';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,12 +19,18 @@ const playfairDisplay = Playfair_Display({
   display: 'swap',
 });
 
+const tenorSans = Tenor_Sans({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 px-[24px] md:px-[66px] py-[23px] flex justify-between items-center bg-white/70 backdrop-blur-md">
-      <h1 className={`${playfairDisplay.className} text-[28px] md:text-[32px]`}>IKON</h1>
+      <h1 className={`${tenorSans.className} text-[28px] md:text-[32px]`}>IKON</h1>
 
       {/* Desktop Menu */}
       <nav
