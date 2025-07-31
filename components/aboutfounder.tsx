@@ -23,14 +23,13 @@ const pinyon = Pinyon_Script({
 });
 
 export default function AboutFounder() {
-  // ref for the image container
-  const ref = useRef<HTMLElement>(null);
-  // scroll progress for that container
+  // now correctly typed as HTMLDivElement
+  const ref = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start']
+    offset: ['start end', 'end start'],
   });
-  // map progress [0→1] to scale [1→1.05]
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
 
   return (
@@ -76,6 +75,7 @@ export default function AboutFounder() {
           Thank you for being here I’m so excited for you to experience what we’re building.
         </p>
 
+        {/* Centered signature */}
         <div className="flex justify-center">
           <p className={`${pinyon.className} text-[24px] text-[#000000]`}>
             Irsa Khan
