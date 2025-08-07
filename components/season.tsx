@@ -41,7 +41,7 @@ const Season = () => {
 
   return (
     <section
-      className="relative w-full px-[100px] py-[120px] overflow-hidden"
+      className="relative w-full md:px-[100px] px-[16px] py-6 md:py-[120px] overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       {/* Title */}

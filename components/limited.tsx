@@ -18,7 +18,7 @@ const Limited = () => {
 
   return (
     <section
-      className="w-full bg-white px-[100px] py-[120px] relative overflow-hidden"
+      className="w-full bg-white md:px-[100px] px-[16px] py-6 md:py-[120px] relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       {/* Main Flex Layout */}

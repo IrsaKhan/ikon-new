@@ -11,7 +11,7 @@ const Premium = () => {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <section className="w-full px-[100px] py-[120px] flex flex-col md:flex-row items-center justify-between gap-[40px] bg-[#F9F5F3]">
+    <section className="w-full md:px-[100px] px-[16px] py-6 md:py-[120px] flex flex-col md:flex-row items-center justify-between gap-[40px] bg-[#F9F5F3]">
       
       {/* Image Container */}
       <div

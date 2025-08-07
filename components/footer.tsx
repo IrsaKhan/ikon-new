@@ -19,7 +19,7 @@ export default function Footer() {
   const [email, setEmail] = useState('');
 
   return (
-    <footer className="bg-[#F7F2EE] px-[100px] pt-[80px] pb-[40px]">
+    <footer className="bg-[#F7F2EE] md:px-[100px] px-[16px] pt-[80px] pb-[40px]">
       <div className="flex flex-col lg:flex-row gap-12">
         {/* Join Us */}
         <div className="flex-1 max-w-xs">
