@@ -21,14 +21,13 @@ const Signature = () => {
   const imageRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: imageRef,
-    offset: ['start end', 'end start'], // when image enters and exits viewport
+    offset: ['start end', 'end start'],
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [1.05, 1]);
 
   return (
     <section className="md:px-[100px] py-16 px-[16px] md:py-[120px] w-full flex flex-col md:flex-row items-start justify-between gap-[40px]">
-      
       {/* Left Content */}
       <div className="flex-[1.4] max-w-[840px] translate-y-[-20px]">
         <p className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-2`}>
@@ -54,7 +53,7 @@ const Signature = () => {
           Included With Every Order:
         </p>
 
-        {/* Icons Section - horizontal */}
+        {/* Icons Section */}
         <div className="flex flex-row flex-wrap gap-[24px] justify-between mb-10 w-full max-w-[820px]">
           {[
             {
@@ -95,7 +94,7 @@ const Signature = () => {
           <button className="px-6 py-3 mb-6 md:mb-0 bg-black text-white rounded-full hover:opacity-90 transition text-sm">
             More Details →
           </button>
-<<<<<<< HEAD
+
           <div className="md:flex items-center gap-4">
             {/* 3 Layered Circles */}
             <div className="flex items-center mb-6 md:mb-0 -space-x-2">
@@ -112,8 +111,6 @@ const Signature = () => {
               </p>
             </div>
           </div>
-=======
->>>>>>> 0f634a5 (Final responsive shop layout with hover images and sidebar)
         </div>
       </div>
 
