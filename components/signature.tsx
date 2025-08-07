@@ -95,6 +95,7 @@ const Signature = () => {
           <button className="px-6 py-3 mb-6 md:mb-0 bg-black text-white rounded-full hover:opacity-90 transition text-sm">
             More Details →
           </button>
+<<<<<<< HEAD
           <div className="md:flex items-center gap-4">
             {/* 3 Layered Circles */}
             <div className="flex items-center mb-6 md:mb-0 -space-x-2">
@@ -111,6 +112,8 @@ const Signature = () => {
               </p>
             </div>
           </div>
+=======
+>>>>>>> 0f634a5 (Final responsive shop layout with hover images and sidebar)
         </div>
       </div>
 

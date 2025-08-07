@@ -1,5 +1,3 @@
-// app/about/page.tsx
-// 'use client';
 
 import AboutHero from '@/components/abouthero';
 import AboutIntro from '@/components/aboutintro';
