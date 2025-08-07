@@ -65,7 +65,7 @@ const TrendingItems = () => {
   };
 
   return (
-    <div className="w-full px-[60px] py-[120px] md:flex gap-[60px] relative">
+    <div className="w-full px-[16px] md:px-[60px] py-[24px] md:py-[120px] md:flex gap-[60px] relative">
       {/* Left Column */}
       <div className="flex-shrink-0 w-[320px]">
         <h1 className="text-4xl md:text-[32px] text-[#676A5E] leading-tight uppercase">
@@ -74,7 +74,7 @@ const TrendingItems = () => {
         <p className="mt-6 text-[16px] md:text-lg text-[#676A5E] leading-relaxed">
           Limited flavors designed to help you show up beautifully. Loved by creatives, coaches and founders.
         </p>
-        <button className="mt-8 px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition">
+        <button className="mt-8 px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition mb-6 md:mb-0">
           All Products
         </button>
       </div>

@@ -27,7 +27,7 @@ const Signature = () => {
   const scale = useTransform(scrollYProgress, [0, 1], [1.05, 1]);
 
   return (
-    <section className="px-[100px] py-[120px] w-full flex flex-col md:flex-row items-start justify-between gap-[40px]">
+    <section className="md:px-[100px] py-16 px-[16px] md:py-[120px] w-full flex flex-col md:flex-row items-start justify-between gap-[40px]">
       
       {/* Left Content */}
       <div className="flex-[1.4] max-w-[840px] translate-y-[-20px]">
@@ -36,7 +36,7 @@ const Signature = () => {
         </p>
 
         <h2 className={`${tenorSans.className} text-[32px] leading-[1.3] text-[#676A5E] mb-6`}>
-          OWN THE MAGIC OF A PAGE THAT <br /> SPEAKS FOR YOU
+          OWN THE MAGIC OF A PAGE THAT SPEAKS FOR YOU
         </h2>
 
         <p className={`${archivoNarrow.className} text-[16px] text-[#676A5E]`}>
@@ -55,7 +55,7 @@ const Signature = () => {
         </p>
 
         {/* Icons Section - horizontal */}
-        <div className="flex flex-row justify-between mb-10 w-full max-w-[820px]">
+        <div className="flex flex-row flex-wrap gap-[24px] justify-between mb-10 w-full max-w-[820px]">
           {[
             {
               icon: '/Group (1).png',
@@ -91,13 +91,13 @@ const Signature = () => {
         </div>
 
         {/* Button + Customers */}
-        <div className="flex items-center justify-between w-full max-w-[800px]">
-          <button className="px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition text-sm">
+        <div className="md:flex items-center justify-between w-full max-w-[800px]">
+          <button className="px-6 py-3 mb-6 md:mb-0 bg-black text-white rounded-full hover:opacity-90 transition text-sm">
             More Details →
           </button>
-          <div className="flex items-center gap-4">
+          <div className="md:flex items-center gap-4">
             {/* 3 Layered Circles */}
-            <div className="flex items-center -space-x-2">
+            <div className="flex items-center mb-6 md:mb-0 -space-x-2">
               <div className="w-[60px] h-[60px] rounded-full bg-[#D9D9D9]"></div>
               <div className="w-[60px] h-[60px] rounded-full bg-[#D9D9D9]"></div>
               <div className="w-[60px] h-[60px] rounded-full bg-[#D9D9D9]"></div>
