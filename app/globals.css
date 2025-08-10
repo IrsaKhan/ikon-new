@@ -1,14 +1,27 @@
 @import "tailwindcss";
 
-
 body {
   font-family: var(--font-tenor-sans), system-ui, sans-serif;
 }
 
+/* Hide scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* 🔒 Disable text selection globally */
+* {
+  user-select: none;
+  -webkit-user-select: none; /* Safari/Chrome */
+  -ms-user-select: none;     /* IE/Edge */
+}
+
+/* 🔒 Disable tap highlight & callout on mobile */
+body {
+  -webkit-touch-callout: none; /* iOS Safari long-press menu */
+  -webkit-tap-highlight-color: transparent;
 }
