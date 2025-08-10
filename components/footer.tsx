@@ -55,7 +55,7 @@ export default function Footer() {
         <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Navigate */}
           <div>
-            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4`}>
+            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4 font-bold`}>
               Navigate
             </h4>
             <ul className={`space-y-2 ${archivoNarrow.className} text-[#676A5E]`}>
@@ -69,7 +69,7 @@ export default function Footer() {
 
           {/* Social */}
           <div>
-            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4`}>
+            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4 font-bold`}>
               Social
             </h4>
             <ul className={`space-y-2 ${archivoNarrow.className} text-[#676A5E]`}>
@@ -81,7 +81,7 @@ export default function Footer() {
 
           {/* Official */}
           <div>
-            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4`}>
+            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4 font-bold`}>
               Official
             </h4>
             <ul className={`space-y-2 ${archivoNarrow.className} text-[#676A5E]`}>
@@ -95,7 +95,7 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4`}>
+            <h4 className={`${archivoNarrow.className} text-sm text-[#676A5E] uppercase mb-4 font-bold`}>
               Support
             </h4>
             <ul className={`space-y-2 ${archivoNarrow.className} text-[#676A5E]`}>
@@ -103,7 +103,6 @@ export default function Footer() {
               <li><a href="#" className="hover:underline">Drop us a note anytime</a></li>
               <li><a href="#" className="hover:underline">Shipping &amp; Returns</a></li>
               <li><a href="#" className="hover:underline">Subscriptions</a></li>
-              <li><a href="#" className="hover:underline">Subscription</a></li>
             </ul>
           </div>
         </div>
