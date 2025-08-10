@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Archivo_Narrow, Tenor_Sans } from 'next/font/google';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
@@ -91,9 +92,12 @@ const Signature = () => {
 
         {/* Button + Customers */}
         <div className="md:flex items-center justify-between w-full max-w-[800px]">
-          <button className="px-6 py-3 mb-6 md:mb-0 bg-black text-white rounded-full hover:opacity-90 transition text-sm">
+          <Link
+            href="/about"
+            className="px-6 py-3 mb-6 md:mb-0 bg-black text-white rounded-full hover:opacity-90 transition text-sm inline-block"
+          >
             More Details →
-          </button>
+          </Link>
         </div>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link'; // ✅ Added import for Link
 import { Archivo_Narrow, Tenor_Sans } from 'next/font/google';
 
 const archivoNarrow = Archivo_Narrow({ weight: '400', subsets: ['latin'], display: 'swap' });
@@ -63,9 +64,11 @@ const Premium = () => {
         </p>
 
         <div className="flex justify-start">
-          <button className="px-6 py-2 bg-black text-white text-sm rounded-full hover:opacity-90 transition">
-            See More →
-          </button>
+          <Link href="/shop" scroll={true} passHref>
+            <button className="px-6 py-2 bg-black text-white text-sm rounded-full hover:opacity-90 transition">
+              See More →
+            </button>
+          </Link>
         </div>
       </div>
     </section>

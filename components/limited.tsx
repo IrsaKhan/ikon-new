@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Archivo_Narrow, Tenor_Sans } from 'next/font/google';
 import { motion } from 'framer-motion';
 
@@ -120,9 +121,13 @@ const Limited = () => {
             </p>
           </div>
 
-          <button className="px-6 py-3 bg-[#BD0F2F] text-white text-sm rounded-full hover:opacity-90 transition">
+          {/* Updated Button with Link */}
+          <Link
+            href="/shop"
+            className="px-6 py-3 bg-[#BD0F2F] text-white text-sm rounded-full hover:opacity-90 transition inline-block"
+          >
             Shop This Flavor →
-          </button>
+          </Link>
         </div>
       </div>
 

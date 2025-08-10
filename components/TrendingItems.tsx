@@ -104,7 +104,10 @@ const TrendingItems = () => {
 
   return (
     <>
-      <div className="w-full px-[16px] md:px-[60px] py-[24px] md:py-[120px] md:flex gap-[60px] relative">
+      <div
+        id="trending-items"
+        className="w-full px-[16px] md:px-[60px] py-[24px] md:py-[120px] md:flex gap-[60px] relative"
+      >
         {/* Left Column */}
         <div className="flex-shrink-0 w-[320px]">
           <h1 className="text-4xl md:text-[32px] text-[#676A5E] leading-tight uppercase">

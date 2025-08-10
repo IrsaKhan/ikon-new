@@ -1,8 +1,22 @@
-// components/Hero.tsx
+'use client';
+
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Hero = () => {
+  const router = useRouter();
+  const [activeButton, setActiveButton] = useState<"shop" | "explore">("shop");
+
+  const scrollToTrending = () => {
+    const section = document.getElementById("trending-items");
+    if (section) {
+      const offset = section.getBoundingClientRect().top + window.scrollY - 80; // adjust -80 if you have a taller navbar
+      window.scrollTo({ top: offset, behavior: "smooth" });
+    }
+  };
+
   return (
     <section className="min-h-screen bg-gradient-to-t from-[#D8DCCB] to-[#CDD4E0] flex flex-col md:flex-row items-center justify-center md:gap-[180px] relative overflow-hidden px-[16px] md:px-12 py-6 pt-[50px] md:pt-[200px] md:py-[100px]">
       
@@ -26,10 +40,33 @@ const Hero = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-8">
-          <button className="px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition">
+          {/* Shop Now Button */}
+          <button
+            onClick={() => {
+              setActiveButton("shop");
+              router.push("/shop");
+            }}
+            className={`px-6 py-3 rounded-full transition ${
+              activeButton === "shop"
+                ? "bg-black text-white"
+                : "bg-transparent border border-black text-black"
+            }`}
+          >
             Shop Now
           </button>
-          <button className="px-6 py-3 bg-transparent border border-black text-black rounded-full hover:opacity-90 transition">
+
+          {/* Explore Button */}
+          <button
+            onClick={() => {
+              setActiveButton("explore");
+              scrollToTrending();
+            }}
+            className={`px-6 py-3 rounded-full transition ${
+              activeButton === "explore"
+                ? "bg-black text-white"
+                : "bg-transparent border border-black text-black"
+            }`}
+          >
             Explore
           </button>
         </div>
