@@ -15,16 +15,16 @@ const tenor = Tenor_Sans({
 
 export default function ContactForm() {
   return (
-    <section className="w-full px-[100px] py-[80px] flex flex-col lg:flex-row gap-[80px]">
+    <section className="w-full px-6 py-10 sm:px-8 sm:py-16 lg:px-[100px] lg:py-[80px] flex flex-col lg:flex-row gap-10 lg:gap-[80px]">
       {/* Left - Studio Info */}
       <div className="flex-1">
         <h3
-          className={`${tenor.className} text-[20px] uppercase tracking-[0.2em] text-[#676A5E] mb-6`}
+          className={`${tenor.className} text-lg sm:text-[20px] uppercase tracking-widest text-[#676A5E] mb-6`}
         >
           Contact Us
         </h3>
         <h2
-          className={`${tenor.className} text-[28px] uppercase tracking-[0.2em] text-[#676A5E] mb-10`}
+          className={`${tenor.className} text-xl sm:text-[28px] uppercase tracking-widest text-[#676A5E] mb-10`}
         >
           Visit Our Studio
         </h2>
@@ -35,20 +35,20 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <p className="uppercase text-sm">Chat to us</p>
-            <p className={`${archivo.className} text-sm`}>info@ikonstudio.com</p>
+            <p className="uppercase text-xs sm:text-sm">Chat to us</p>
+            <p className={`${archivo.className} text-xs sm:text-sm`}>info@ikonstudio.com</p>
           </div>
 
           <div>
-            <p className="uppercase text-sm">Visit our office branch</p>
-            <p className={`${archivo.className} text-sm`}>
+            <p className="uppercase text-xs sm:text-sm">Visit our office branch</p>
+            <p className={`${archivo.className} text-xs sm:text-sm`}>
               58 A, East Madison Street, Baltimore, MD USA 4508
             </p>
           </div>
 
           <div>
-            <p className="uppercase text-sm">Call us</p>
-            <p className={`${archivo.className} text-sm`}>
+            <p className="uppercase text-xs sm:text-sm">Call us</p>
+            <p className={`${archivo.className} text-xs sm:text-sm`}>
               +1 000 123 456 789 / +92 300 123 4567
             </p>
           </div>
@@ -58,7 +58,7 @@ export default function ContactForm() {
       {/* Right - Form */}
       <div className="flex-1">
         <form className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <input
               type="text"
               placeholder="First Name"
@@ -71,7 +71,7 @@ export default function ContactForm() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <input
               type="email"
               placeholder="Mail Address"

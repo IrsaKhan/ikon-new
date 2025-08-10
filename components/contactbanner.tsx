@@ -18,7 +18,7 @@ export default function ContactBanner() {
       <motion.div
         ref={ref}
         style={{ scale }}
-        className="relative w-full h-[690px]"
+        className="relative w-full h-[400px] sm:h-[500px] md:h-[690px]"
       >
         <Image
           src="/Map.png" // your banner image file
