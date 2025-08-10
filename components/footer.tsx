@@ -17,6 +17,15 @@ const tenorSans = Tenor_Sans({
 
 export default function Footer() {
   const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
+
+  const handleSend = () => {
+    if (!email.trim()) return;
+    setSent(true);
+    setEmail(''); // clear the input
+    // You can add actual send logic here
+    setTimeout(() => setSent(false), 3000);
+  };
 
   return (
     <footer className="bg-[#F7F2EE] md:px-[100px] px-[16px] pt-[80px] pb-[40px]">
@@ -36,8 +45,13 @@ export default function Footer() {
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
-          <button className="px-6 py-3 bg-black text-white rounded-full text-sm hover:opacity-90 transition">
-            Send Message →
+          <button
+            onClick={handleSend}
+            disabled={!email.trim() || sent}
+            className={`px-6 py-3 rounded-full text-sm transition 
+              ${sent ? 'bg-[#676A5E] text-white' : 'bg-black text-white hover:opacity-90'}`}
+          >
+            {sent ? 'Sent ✓' : 'Send Message →'}
           </button>
         </div>
 
