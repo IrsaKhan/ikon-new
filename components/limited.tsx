@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Archivo_Narrow, Tenor_Sans } from 'next/font/google';
 import { motion } from 'framer-motion';
@@ -11,29 +11,57 @@ const tenorSans = Tenor_Sans({ weight: '400', subsets: ['latin'], display: 'swap
 const Limited = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    setCursorPos({ x: e.clientX, y: e.clientY });
+    if (!isMobile) {
+      setCursorPos({ x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isMobile) {
+      const touch = e.touches[0];
+      setCursorPos({ x: touch.clientX, y: touch.clientY });
+    }
+  };
+
+  const handleTouchStart = (index: number, e: React.TouchEvent) => {
+    if (isMobile) {
+      setHoveredIndex(index);
+      const touch = e.touches[0];
+      setCursorPos({ x: touch.clientX, y: touch.clientY });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (isMobile) {
+      setHoveredIndex(null);
+    }
   };
 
   return (
     <section
       className="w-full bg-white md:px-[100px] px-[16px] py-6 md:py-[120px] relative overflow-hidden"
       onMouseMove={handleMouseMove}
+      onTouchMove={handleTouchMove}
     >
-      {/* Main Flex Layout */}
       <div className="flex flex-col lg:flex-row items-center justify-between gap-[40px]">
-        {/* Left: Sorbet & Cards (enlarged) */}
+        {/* Left: Sorbet & Cards */}
         <div className="relative w-full max-w-[750px] h-[560px]">
-          {/* Background Sorbet Image with extra bottom‑right rounding */}
           <Image
             src="/Rectangle 45198.png"
             alt="Sorbet Background"
             fill
             className="object-cover rounded-[20px] rounded-br-[150px]"
           />
-
-          {/* Centered Cards */}
           <div className="absolute bottom-[60px] left-0 right-0 flex justify-center gap-[16px] z-30">
             {[
               { src: '/image 67.png', z: 10 },
@@ -42,8 +70,10 @@ const Limited = () => {
             ].map((card, index) => (
               <motion.div
                 key={index}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onMouseEnter={() => !isMobile && setHoveredIndex(index)}
+                onMouseLeave={() => !isMobile && setHoveredIndex(null)}
+                onTouchStart={(e) => handleTouchStart(index, e)}
+                onTouchEnd={handleTouchEnd}
                 animate={{
                   y: hoveredIndex === index ? -20 : 0,
                   scale: hoveredIndex === index ? 1.08 : 1,
@@ -63,7 +93,7 @@ const Limited = () => {
           </div>
         </div>
 
-        {/* Right Content (wider) */}
+        {/* Right Content */}
         <div className="w-full max-w-[720px] text-[#676A5E]">
           <h2 className={`${tenorSans.className} text-[32px] text-[#BD0F2F] tracking-[0.3em] mb-2 uppercase`}>
             Cherry Sorbet
@@ -96,7 +126,7 @@ const Limited = () => {
         </div>
       </div>
 
-      {/* Infinite Marquee - GREEN text, RED stars */}
+      {/* Infinite Marquee */}
       <div className="mt-[80px] w-full overflow-hidden whitespace-nowrap">
         <div className="animate-marquee text-[#B2BA98] text-[20px] tracking-[0.3em] uppercase flex gap-10 font-medium">
           {Array.from({ length: 10 }).map((_, i) => (
@@ -108,7 +138,7 @@ const Limited = () => {
         </div>
       </div>
 
-      {/* Swipe Cursor */}
+      {/* Custom Cursor */}
       {hoveredIndex !== null && (
         <motion.div
           className="fixed pointer-events-none z-50"
@@ -123,7 +153,6 @@ const Limited = () => {
         </motion.div>
       )}
 
-      {/* Marquee Animation */}
       <style jsx>{`
         .animate-marquee {
           display: inline-block;

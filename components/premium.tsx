@@ -15,9 +15,10 @@ const Premium = () => {
       
       {/* Image Container */}
       <div
-        className="relative w-full max-w-[874px] h-[706px] rounded-[20px] overflow-hidden transition-all duration-700"
+        className="relative w-full max-w-[874px] aspect-square md:aspect-auto md:h-[706px] rounded-[20px] overflow-hidden transition-all duration-700"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onClick={() => setHovered((prev) => !prev)} // mobile tap toggle
       >
         {/* Laptop Image */}
         <Image
@@ -35,29 +36,29 @@ const Premium = () => {
         />
         {/* Overlay Text */}
         {hovered && (
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-white transition-opacity duration-700">
-            <h3 className="text-[24px] tracking-widest uppercase mb-1">New York Cheesecake</h3>
-            <p className="text-[16px] tracking-[0.2em]">Classic. Intentional. Effortlessly Iconic.</p>
+          <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-center text-white transition-opacity duration-700 px-2">
+            <h3 className="text-[20px] md:text-[24px] tracking-widest uppercase mb-1">New York Cheesecake</h3>
+            <p className="text-[14px] md:text-[16px] tracking-[0.2em]">Classic. Intentional. Effortlessly Iconic.</p>
           </div>
         )}
       </div>
 
       {/* Right Content */}
       <div className="max-w-[560px] text-[#676A5E]">
-        <h2 className={`${tenorSans.className} text-[32px] leading-[1.6] mb-10`}>
+        <h2 className={`${tenorSans.className} text-[28px] md:text-[32px] leading-[1.6] mb-10`}>
           ONE SLICE AND THEY’LL <br />
           REMEMBER THE WHOLE THING.
         </h2>
 
-        <p className={`${archivoNarrow.className} text-[16px] mb-6`}>
+        <p className={`${archivoNarrow.className} text-[14px] md:text-[16px] mb-6`}>
           This Signature Page was designed with the same attention to detail that makes New York Cheesecake a timeless favorite — smooth layers, balanced richness, and a finish that leaves a mark.
         </p>
 
-        <p className={`${archivoNarrow.className} text-[16px] mb-6`}>
+        <p className={`${archivoNarrow.className} text-[14px] md:text-[16px] mb-6`}>
           Every section, scroll, and spacing choice is considered. The palette is crisp, the layout indulgently minimal. It’s made for those who appreciate quiet confidence — not loud designs.
         </p>
 
-        <p className={`${archivoNarrow.className} text-[16px] mb-12`}>
+        <p className={`${archivoNarrow.className} text-[14px] md:text-[16px] mb-12`}>
           Whether you’re an artist, founder, consultant or someone in-between, this page doesn’t just say “I’m here” — it says I know exactly what I’m doing.
         </p>
 

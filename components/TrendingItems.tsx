@@ -33,21 +33,20 @@ const items: TICardProps[] = [
     img: '/card-ine-img-1.png',
     hoverImg: '/image 57 (2).png',
   },
-    {
+  {
     title: 'IKON / Signature Page – Chocolate Gelato',
     rating: 5,
     reviews: 52,
     img: '/card-ine-img-2.png',
     hoverImg: '/Rectangle 11.png',
   },
-    {
+  {
     title: 'IKON / Signature Page – Mango Glacé',
     rating: 5,
     reviews: 52,
     img: '/Group 144033 (1).png',
     hoverImg: '/image 52 (1).png',
   },
-  
 ];
 
 const TrendingItems = () => {
@@ -55,12 +54,25 @@ const TrendingItems = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
 
+  const isTouchDevice =
+    typeof window !== 'undefined' && 'ontouchstart' in window;
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     setMousePos({
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
+    });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    setMousePos({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
     });
   };
 
@@ -72,7 +84,8 @@ const TrendingItems = () => {
           Trending <br /> Items
         </h1>
         <p className="mt-6 text-[16px] md:text-lg text-[#676A5E] leading-relaxed">
-          Limited flavors designed to help you show up beautifully. Loved by creatives, coaches and founders.
+          Limited flavors designed to help you show up beautifully. Loved by
+          creatives, coaches and founders.
         </p>
         <button className="mt-8 px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition mb-6 md:mb-0">
           All Products
@@ -83,9 +96,15 @@ const TrendingItems = () => {
       <div
         ref={containerRef}
         className="relative w-full overflow-hidden"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setShowCursor(true)}
-        onMouseLeave={() => setShowCursor(false)}
+        onMouseMove={!isTouchDevice ? handleMouseMove : undefined}
+        onMouseEnter={() => !isTouchDevice && setShowCursor(true)}
+        onMouseLeave={() => !isTouchDevice && setShowCursor(false)}
+        onTouchStart={(e) => {
+          setShowCursor(true);
+          handleTouchMove(e);
+        }}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={() => setShowCursor(false)}
       >
         {/* Custom Cursor */}
         {showCursor && (
@@ -98,6 +117,7 @@ const TrendingItems = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
             <div className="w-[80px] h-[80px] rounded-full bg-white/40 backdrop-blur-sm text-[10px] text-[#676A5E] flex items-center justify-center font-medium uppercase tracking-wide">
               Swipe
