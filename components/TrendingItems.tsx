@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import TICard, { TICardProps } from './TICard';
 
@@ -51,8 +51,10 @@ const items: TICardProps[] = [
 
 const TrendingItems = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null); // Ref for the scrollable flex container
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
+  const [dragLimit, setDragLimit] = useState(0);
 
   const isTouchDevice =
     typeof window !== 'undefined' && 'ontouchstart' in window;
@@ -75,6 +77,22 @@ const TrendingItems = () => {
       y: touch.clientY - rect.top,
     });
   };
+
+  // Calculate drag constraints dynamically based on container and scroll content width
+  useEffect(() => {
+    const updateDragLimit = () => {
+      if (!containerRef.current || !scrollRef.current) return;
+      const containerWidth = containerRef.current.offsetWidth;
+      const scrollWidth = scrollRef.current.scrollWidth;
+      const maxDrag = scrollWidth - containerWidth;
+      setDragLimit(maxDrag > 0 ? maxDrag : 0);
+    };
+
+    updateDragLimit();
+
+    window.addEventListener('resize', updateDragLimit);
+    return () => window.removeEventListener('resize', updateDragLimit);
+  }, [items.length]);
 
   return (
     <div className="w-full px-[16px] md:px-[60px] py-[24px] md:py-[120px] md:flex gap-[60px] relative">
@@ -126,9 +144,10 @@ const TrendingItems = () => {
         )}
 
         <motion.div
+          ref={scrollRef}
           className="flex gap-[60px] pr-[60px] cursor-grab active:cursor-grabbing select-none"
           drag="x"
-          dragConstraints={{ left: -1000, right: 0 }}
+          dragConstraints={{ left: -dragLimit, right: 0 }}
           dragElastic={0.1}
           dragTransition={{ bounceStiffness: 300, bounceDamping: 20 }}
           onDragStart={(e) => {
