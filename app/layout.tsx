@@ -1,11 +1,10 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Tenor_Sans } from "next/font/google";
 import "./globals.css";
 
 import Header from "@/components/Header";
 import Footer from "@/components/footer";
-import { useEffect } from "react";
+import AntiCopy from "./AntiCopy"; // ✅ Import here
 
 const tenorSans = Tenor_Sans({
   subsets: ["latin"],
@@ -23,40 +22,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    // Prevent right-click
-    const handleContextMenu = (e: MouseEvent) => e.preventDefault();
-    document.addEventListener("contextmenu", handleContextMenu);
-
-    // Prevent long press on mobile
-    let touchTimer: NodeJS.Timeout;
-    const handleTouchStart = (e: TouchEvent) => {
-      touchTimer = setTimeout(() => e.preventDefault(), 500);
-    };
-    const handleTouchEnd = () => clearTimeout(touchTimer);
-
-    document.addEventListener("touchstart", handleTouchStart);
-    document.addEventListener("touchend", handleTouchEnd);
-
-    // Prevent copy/cut/paste
-    const blockEvent = (e: Event) => e.preventDefault();
-    ["copy", "cut", "paste"].forEach(evt =>
-      document.addEventListener(evt, blockEvent)
-    );
-
-    return () => {
-      document.removeEventListener("contextmenu", handleContextMenu);
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchend", handleTouchEnd);
-      ["copy", "cut", "paste"].forEach(evt =>
-        document.removeEventListener(evt, blockEvent)
-      );
-    };
-  }, []);
-
   return (
     <html lang="en">
       <body className={`${tenorSans.className} antialiased`}>
+        <AntiCopy /> {/* ✅ Runs on client only */}
         <Header />
         <main>{children}</main>
         <Footer />
