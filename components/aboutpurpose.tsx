@@ -1,4 +1,3 @@
-// components/Purpose.tsx
 'use client';
 
 import { useState } from 'react';
@@ -28,7 +27,7 @@ export default function Purpose() {
       onMouseLeave={() => setHovered(false)}
     >
       {/* Intro Heading */}
-      <div className="text-center mb-16">
+      <div className="text-center mb-16 px-4 md:px-0">
         <p
           className={`${archivo.className} text-sm text-[#676A5E] uppercase tracking-[0.2em] mb-2`}
         >
@@ -43,64 +42,60 @@ export default function Purpose() {
       </div>
 
       {/* Main Row */}
-      <div className="relative flex items-start justify-between">
+      <div
+        className="relative flex items-start justify-between md:flex-row md:gap-0 flex-col gap-12"
+      >
         {/* Left Item */}
-        <div className="flex flex-col items-center text-center max-w-[200px]">
-          <div className="w-[270px] h-[355.56px] rounded-lg overflow-hidden mb-4">
+        <div className="flex flex-col items-center text-center max-w-[320px] mx-auto md:mx-0 w-full sm:w-[320px]">
+          <div className="w-full h-[200px] md:h-[355.56px] rounded-lg overflow-hidden mb-4">
             <Image
               src="/AdobeStock_1002921869.png"
               alt="Tech Simplification"
-              width={200}
-              height={200}
-              className="object-cover"
+              width={320}
+              height={220}
+              className="object-cover w-full h-full"
             />
           </div>
-          <p
-            className={`${archivo.className} text-[14px] text-[#676A5E] uppercase`}
-          >
+          <p className={`${archivo.className} text-[14px] text-[#676A5E] uppercase`}>
             Tech Simplification
           </p>
         </div>
 
         {/* Center Item */}
-        <div className="flex flex-col items-center text-center">
-          <div className="w-[270px] h-[355.56px] rounded-lg overflow-hidden mb-4">
+        <div className="flex flex-col items-center text-center max-w-[320px] mx-auto w-full sm:w-[320px]">
+          <div className="w-full h-[200px] md:h-[355.56px] rounded-lg overflow-hidden mb-4">
             <Image
               src="/AdobeStock_985183535.png"
               alt="Smart Formats"
-              width={240}
-              height={260}
-              className="object-cover"
+              width={320}
+              height={220}
+              className="object-cover w-full h-full"
             />
           </div>
-          <p
-            className={`${archivo.className} text-[14px] text-[#676A5E] uppercase`}
-          >
+          <p className={`${archivo.className} text-[14px] text-[#676A5E] uppercase`}>
             Smart Formats
           </p>
         </div>
 
         {/* Right Item */}
-        <div className="flex flex-col items-center text-center max-w-[200px]">
-          <div className="w-[270px] h-[355.56px] rounded-lg overflow-hidden mb-4">
+        <div className="flex flex-col items-center text-center max-w-[320px] mx-auto md:mx-0 w-full sm:w-[320px]">
+          <div className="w-full h-[200px] md:h-[355.56px] rounded-lg overflow-hidden mb-4">
             <Image
               src="/AdobeStock_1002909179.png"
               alt="Live-Ready Formats"
-              width={200}
-              height={200}
-              className="object-cover"
+              width={320}
+              height={220}
+              className="object-cover w-full h-full"
             />
           </div>
-          <p
-            className={`${archivo.className} text-[14px] text-[#676A5E] uppercase`}
-          >
+          <p className={`${archivo.className} text-[14px] text-[#676A5E] uppercase`}>
             Live-Ready Formats
           </p>
         </div>
 
-        {/* SVG arrows */}
+        {/* SVG arrows - visible only on md+ */}
         <svg
-          className="absolute left-0 right-0 top-0 w-[2000px] h-[150px] pointer-events-none"
+          className="hidden md:block absolute left-0 right-0 top-0 w-[2000px] h-[150px] pointer-events-none"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
@@ -118,16 +113,15 @@ export default function Purpose() {
           </defs>
 
           {/* Left → Center */}
-          {/* Left → Center (stops at ~45%) */}
           <path
-            d="M8.5,80 C30,40 35,40 35.8,40"
+            d="M16.2,60 C30,40 35,40 33.6,39.5"
             className="arrow-path"
             markerEnd="url(#arrowhead)"
           />
 
           {/* Center → Right */}
           <path
-            d="M48.2,60 C60,80 70,80 73,75"
+            d="M51,60 C60,80 70,80 69,80"
             className="arrow-path"
             markerEnd="url(#arrowhead)"
           />
@@ -135,13 +129,13 @@ export default function Purpose() {
       </div>
 
       {/* Centered Call-to-Action */}
-      <div className="mt-20 text-center">
+      <div className="mt-20 text-center px-4 sm:px-6 md:px-0 max-w-sm mx-auto">
         <h3
-          className={`${tenor.className} text-[24px] text-[#676A5E] uppercase tracking-[0.1em] mb-6`}
+          className={`${tenor.className} text-[18px] sm:text-[20px] text-[#676A5E] uppercase tracking-[0.1em] mb-6 leading-tight`}
         >
-          Design-Led Products, Built for the Way You Work
+          Design-Led Products,<br /> Built for the Way You Work
         </h3>
-        <button className="px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition">
+        <button className="px-5 py-2 sm:px-6 sm:py-2.5 bg-black text-white rounded-full hover:opacity-90 transition w-[20] max-w-xs mx-auto text-xs sm:text-sm">
           Discover More →
         </button>
       </div>

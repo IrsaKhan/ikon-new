@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import TICard, { TICardProps } from './TICard';
 
@@ -33,27 +33,31 @@ const items: TICardProps[] = [
     img: '/card-ine-img-1.png',
     hoverImg: '/image 57 (2).png',
   },
-    {
+  {
     title: 'IKON / Signature Page – Chocolate Gelato',
     rating: 5,
     reviews: 52,
     img: '/card-ine-img-2.png',
     hoverImg: '/Rectangle 11.png',
   },
-    {
+  {
     title: 'IKON / Signature Page – Mango Glacé',
     rating: 5,
     reviews: 52,
     img: '/Group 144033 (1).png',
     hoverImg: '/image 52 (1).png',
   },
-  
 ];
 
 const TrendingItems = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null); // Ref for the scrollable flex container
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
+  const [dragLimit, setDragLimit] = useState(0);
+
+  const isTouchDevice =
+    typeof window !== 'undefined' && 'ontouchstart' in window;
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
@@ -64,17 +68,44 @@ const TrendingItems = () => {
     });
   };
 
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    setMousePos({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    });
+  };
+
+  // Calculate drag constraints dynamically based on container and scroll content width
+  useEffect(() => {
+    const updateDragLimit = () => {
+      if (!containerRef.current || !scrollRef.current) return;
+      const containerWidth = containerRef.current.offsetWidth;
+      const scrollWidth = scrollRef.current.scrollWidth;
+      const maxDrag = scrollWidth - containerWidth;
+      setDragLimit(maxDrag > 0 ? maxDrag : 0);
+    };
+
+    updateDragLimit();
+
+    window.addEventListener('resize', updateDragLimit);
+    return () => window.removeEventListener('resize', updateDragLimit);
+  }, [items.length]);
+
   return (
-    <div className="w-full px-[60px] py-[120px] md:flex gap-[60px] relative">
+    <div className="w-full px-[16px] md:px-[60px] py-[24px] md:py-[120px] md:flex gap-[60px] relative">
       {/* Left Column */}
       <div className="flex-shrink-0 w-[320px]">
         <h1 className="text-4xl md:text-[32px] text-[#676A5E] leading-tight uppercase">
           Trending <br /> Items
         </h1>
         <p className="mt-6 text-[16px] md:text-lg text-[#676A5E] leading-relaxed">
-          Limited flavors designed to help you show up beautifully. Loved by creatives, coaches and founders.
+          Limited flavors designed to help you show up beautifully. Loved by
+          creatives, coaches and founders.
         </p>
-        <button className="mt-8 px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition">
+        <button className="mt-8 px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition mb-6 md:mb-0">
           All Products
         </button>
       </div>
@@ -83,9 +114,15 @@ const TrendingItems = () => {
       <div
         ref={containerRef}
         className="relative w-full overflow-hidden"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setShowCursor(true)}
-        onMouseLeave={() => setShowCursor(false)}
+        onMouseMove={!isTouchDevice ? handleMouseMove : undefined}
+        onMouseEnter={() => !isTouchDevice && setShowCursor(true)}
+        onMouseLeave={() => !isTouchDevice && setShowCursor(false)}
+        onTouchStart={(e) => {
+          setShowCursor(true);
+          handleTouchMove(e);
+        }}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={() => setShowCursor(false)}
       >
         {/* Custom Cursor */}
         {showCursor && (
@@ -98,6 +135,7 @@ const TrendingItems = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
             <div className="w-[80px] h-[80px] rounded-full bg-white/40 backdrop-blur-sm text-[10px] text-[#676A5E] flex items-center justify-center font-medium uppercase tracking-wide">
               Swipe
@@ -106,9 +144,10 @@ const TrendingItems = () => {
         )}
 
         <motion.div
+          ref={scrollRef}
           className="flex gap-[60px] pr-[60px] cursor-grab active:cursor-grabbing select-none"
           drag="x"
-          dragConstraints={{ left: -1000, right: 0 }}
+          dragConstraints={{ left: -dragLimit, right: 0 }}
           dragElastic={0.1}
           dragTransition={{ bounceStiffness: 300, bounceDamping: 20 }}
           onDragStart={(e) => {
