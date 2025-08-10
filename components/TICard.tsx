@@ -18,9 +18,17 @@ export type TICardProps = {
   reviews: number;
   img: string;
   hoverImg: string;
+  onJoinWaitlist?: () => void; // <-- Added
 };
 
-const TICard = ({ title, rating, reviews, img, hoverImg }: TICardProps) => {
+const TICard = ({
+  title,
+  rating,
+  reviews,
+  img,
+  hoverImg,
+  onJoinWaitlist,
+}: TICardProps) => {
   const [hovered, setHovered] = useState(false);
 
   const renderStars = (count: number) => {
@@ -33,14 +41,9 @@ const TICard = ({ title, rating, reviews, img, hoverImg }: TICardProps) => {
     );
   };
 
-  // Handle touch for mobile
-  const handleTouchStart = () => {
-    setHovered(true);
-  };
-
-  const handleTouchEnd = () => {
-    setHovered(false);
-  };
+  // Touch for mobile
+  const handleTouchStart = () => setHovered(true);
+  const handleTouchEnd = () => setHovered(false);
 
   return (
     <div
@@ -62,7 +65,7 @@ const TICard = ({ title, rating, reviews, img, hoverImg }: TICardProps) => {
           >
             <Image
               src={hovered ? hoverImg : img}
-              alt="Product"
+              alt={title}
               fill
               className="object-cover"
               draggable={false}
@@ -70,15 +73,16 @@ const TICard = ({ title, rating, reviews, img, hoverImg }: TICardProps) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Waitlist Button */}
+        {/* Join Waitlist Button */}
         <AnimatePresence>
           {hovered && (
             <motion.button
+              onClick={onJoinWaitlist} // <-- Trigger callback
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#D9D9D9]/80 text-black text-xs w-[200px] flex items-center justify-center py-2 rounded-full backdrop-blur-sm"
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#D9D9D9]/80 text-black text-xs w-[200px] flex items-center justify-center py-2 rounded-full backdrop-blur-sm hover:bg-[#c9c9c9]"
             >
               Join Waitlist
             </motion.button>
@@ -86,6 +90,7 @@ const TICard = ({ title, rating, reviews, img, hoverImg }: TICardProps) => {
         </AnimatePresence>
       </div>
 
+      {/* Product Info */}
       <div className="mt-3 cursor-default">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
