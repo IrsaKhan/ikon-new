@@ -94,23 +94,6 @@ const Signature = () => {
           <button className="px-6 py-3 mb-6 md:mb-0 bg-black text-white rounded-full hover:opacity-90 transition text-sm">
             More Details →
           </button>
-
-          <div className="md:flex items-center gap-4">
-            {/* 3 Layered Circles */}
-            <div className="flex items-center mb-6 md:mb-0 -space-x-2">
-              <div className="w-[60px] h-[60px] rounded-full bg-[#D9D9D9]"></div>
-              <div className="w-[60px] h-[60px] rounded-full bg-[#D9D9D9]"></div>
-              <div className="w-[60px] h-[60px] rounded-full bg-[#D9D9D9]"></div>
-            </div>
-            <div>
-              <p className={`${tenorSans.className} text-[#676A5E] tracking-[0.2em] text-[24px]`}>
-                32K HAPPY CUSTOMERS
-              </p>
-              <p className={`${archivoNarrow.className} text-sm text-[#676A5E]`}>
-                Customer Support
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
