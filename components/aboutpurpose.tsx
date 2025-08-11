@@ -135,7 +135,15 @@ export default function Purpose() {
         >
           Design-Led Products,<br /> Built for the Way You Work
         </h3>
-        <button className="px-5 py-2 sm:px-6 sm:py-2.5 bg-black text-white rounded-full hover:opacity-90 transition w-max max-w-xs mx-auto text-xs sm:text-sm">
+        <button
+          onClick={() => {
+            const element = document.getElementById('trending-items');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          className="px-5 py-2 sm:px-6 sm:py-2.5 bg-black text-white rounded-full hover:opacity-90 transition w-max max-w-xs mx-auto text-xs sm:text-sm"
+        >
           Discover More →
         </button>
       </div>

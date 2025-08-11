@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Archivo_Narrow, Tenor_Sans } from 'next/font/google';
 
 const archivo = Archivo_Narrow({
@@ -14,6 +15,53 @@ const tenor = Tenor_Sans({
 });
 
 export default function ContactForm() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+  const [sent, setSent] = useState(false);
+
+  // Validation: all except phone required
+  const isFormValid =
+    formData.firstName.trim() &&
+    formData.lastName.trim() &&
+    formData.email.trim() &&
+    formData.message.trim();
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+
+    setSent(true);
+
+    // Here you can send formData to backend or API
+
+    // Reset after 3 seconds
+    setTimeout(() => {
+      setSent(false);
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        message: '',
+      });
+    }, 3000);
+  };
+
   return (
     <section className="w-full px-6 py-10 sm:px-8 sm:py-16 lg:px-[100px] lg:py-[80px] flex flex-col lg:flex-row gap-10 lg:gap-[80px]">
       {/* Left - Studio Info */}
@@ -36,7 +84,9 @@ export default function ContactForm() {
 
           <div>
             <p className="uppercase text-xs sm:text-sm">Chat to us</p>
-            <p className={`${archivo.className} text-xs sm:text-sm`}>info@ikonstudio.com</p>
+            <p className={`${archivo.className} text-xs sm:text-sm`}>
+              info@ikonstudio.com
+            </p>
           </div>
 
           <div>
@@ -57,44 +107,66 @@ export default function ContactForm() {
 
       {/* Right - Form */}
       <div className="flex-1">
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <input
               type="text"
+              name="firstName"
               placeholder="First Name"
               className="border border-[#ccc] p-3 rounded-md w-full"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
             />
             <input
               type="text"
+              name="lastName"
               placeholder="Last Name"
               className="border border-[#ccc] p-3 rounded-md w-full"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <input
               type="email"
+              name="email"
               placeholder="Mail Address"
               className="border border-[#ccc] p-3 rounded-md w-full"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
             <input
               type="text"
+              name="phone"
               placeholder="Phone #"
               className="border border-[#ccc] p-3 rounded-md w-full"
+              value={formData.phone}
+              onChange={handleChange}
             />
           </div>
 
           <textarea
+            name="message"
             placeholder="Message"
             rows={5}
             className="border border-[#ccc] p-3 rounded-md w-full"
-          ></textarea>
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
 
           <button
             type="submit"
-            className="px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition"
+            disabled={sent || !isFormValid}
+            className={`px-6 py-3 rounded-full text-white transition ${
+              sent ? 'bg-[#676A5E] cursor-default' : 'bg-black hover:opacity-90'
+            }`}
           >
-            Send Message →
+            {sent ? 'Sent ✓' : 'Send Message →'}
           </button>
         </form>
       </div>

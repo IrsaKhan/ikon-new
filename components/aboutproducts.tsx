@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import TICard, { TICardProps } from './TICard';
 
 const items: TICardProps[] = [
@@ -50,11 +51,15 @@ const items: TICardProps[] = [
 ];
 
 const TrendingItems = () => {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null); // Ref for the scrollable flex container
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCursor, setShowCursor] = useState(false);
   const [dragLimit, setDragLimit] = useState(0);
+  const [showWaitlist, setShowWaitlist] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<TICardProps | null>(null);
+  const [email, setEmail] = useState('');
 
   const isTouchDevice =
     typeof window !== 'undefined' && 'ontouchstart' in window;
@@ -78,7 +83,6 @@ const TrendingItems = () => {
     });
   };
 
-  // Calculate drag constraints dynamically based on container and scroll content width
   useEffect(() => {
     const updateDragLimit = () => {
       if (!containerRef.current || !scrollRef.current) return;
@@ -89,82 +93,163 @@ const TrendingItems = () => {
     };
 
     updateDragLimit();
-
     window.addEventListener('resize', updateDragLimit);
     return () => window.removeEventListener('resize', updateDragLimit);
-  }, [items.length]);
+  }, []);
+
+  const handleJoinWaitlistClick = (item: TICardProps) => {
+    setSelectedItem(item);
+    setShowWaitlist(true);
+  };
 
   return (
-    <div className="w-full px-[16px] md:px-[60px] py-[24px] md:py-[120px] md:flex gap-[60px] relative">
-      {/* Left Column */}
-      <div className="flex-shrink-0 w-[320px]">
-        <h1 className="text-4xl md:text-[32px] text-[#676A5E] leading-tight uppercase">
-          Trending <br /> Items
-        </h1>
-        <p className="mt-6 text-[16px] md:text-lg text-[#676A5E] leading-relaxed">
-          Limited flavors designed to help you show up beautifully. Loved by
-          creatives, coaches and founders.
-        </p>
-        <button className="mt-8 px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition mb-6 md:mb-0">
-          All Products
-        </button>
+    <>
+      <div
+        id="trending-items"
+        className="w-full px-[16px] md:px-[60px] py-[24px] md:py-[120px] md:flex gap-[60px] relative"
+      >
+        {/* Left Column */}
+        <div className="flex-shrink-0 w-[320px]">
+          <h1 className="text-4xl md:text-[32px] text-[#676A5E] leading-tight uppercase">
+            Trending <br /> Items
+          </h1>
+          <p className="mt-6 text-[16px] md:text-lg text-[#676A5E] leading-relaxed">
+            Limited flavors designed to help you show up beautifully. Loved by
+            creatives, coaches and founders.
+          </p>
+          <button
+            onClick={() => router.push('/shop')}
+            className="mt-8 px-6 py-3 bg-black text-white rounded-full hover:opacity-90 transition mb-6"
+          >
+            All Products
+          </button>
+        </div>
+
+        {/* Right Column */}
+        <div
+          ref={containerRef}
+          className="relative w-full overflow-hidden"
+          onMouseMove={!isTouchDevice ? handleMouseMove : undefined}
+          onMouseEnter={() => !isTouchDevice && setShowCursor(true)}
+          onMouseLeave={() => !isTouchDevice && setShowCursor(false)}
+          onTouchStart={(e) => {
+            setShowCursor(true);
+            handleTouchMove(e);
+          }}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={() => setShowCursor(false)}
+        >
+          {showCursor && (
+            <motion.div
+              className="absolute z-20 pointer-events-none"
+              style={{
+                top: mousePos.y - 40,
+                left: mousePos.x - 40,
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="w-[80px] h-[80px] rounded-full bg-white/40 backdrop-blur-sm text-[10px] text-[#676A5E] flex items-center justify-center font-medium uppercase tracking-wide">
+                Swipe
+              </div>
+            </motion.div>
+          )}
+
+          <motion.div
+            ref={scrollRef}
+            className="flex gap-[60px] pr-[60px] cursor-grab active:cursor-grabbing select-none"
+            drag="x"
+            dragConstraints={{ left: -dragLimit, right: 0 }}
+            dragElastic={0.1}
+            dragTransition={{ bounceStiffness: 300, bounceDamping: 20 }}
+            onDragStart={(e) => {
+              const target = e.target as HTMLElement;
+              if (target.tagName === 'IMG') {
+                e.preventDefault();
+              }
+            }}
+          >
+            {items.map((item, idx) => (
+              <div key={idx} onDragStart={(e) => e.preventDefault()}>
+                <TICard {...item} onJoinWaitlist={() => handleJoinWaitlistClick(item)} />
+              </div>
+            ))}
+          </motion.div>
+        </div>
       </div>
 
-      {/* Right Column */}
-      <div
-        ref={containerRef}
-        className="relative w-full overflow-hidden"
-        onMouseMove={!isTouchDevice ? handleMouseMove : undefined}
-        onMouseEnter={() => !isTouchDevice && setShowCursor(true)}
-        onMouseLeave={() => !isTouchDevice && setShowCursor(false)}
-        onTouchStart={(e) => {
-          setShowCursor(true);
-          handleTouchMove(e);
-        }}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={() => setShowCursor(false)}
-      >
-        {/* Custom Cursor */}
-        {showCursor && (
+      {/* Waitlist Modal */}
+      <AnimatePresence>
+        {showWaitlist && selectedItem && (
           <motion.div
-            className="absolute z-20 pointer-events-none"
-            style={{
-              top: mousePos.y - 40,
-              left: mousePos.x - 40,
-            }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
           >
-            <div className="w-[80px] h-[80px] rounded-full bg-white/40 backdrop-blur-sm text-[10px] text-[#676A5E] flex items-center justify-center font-medium uppercase tracking-wide">
-              Swipe
-            </div>
+            <motion.div
+              className="bg-white rounded-lg shadow-lg max-w-md w-full overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {/* Top Image */}
+              <div className="w-full h-48 bg-gray-200 overflow-hidden">
+                <img
+                  src={selectedItem.img}
+                  alt={selectedItem.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Message */}
+              <div className="p-6 text-center">
+                <h2 className="text-2xl font-medium text-[#676A5E]">
+                  Welcome to the IKON Waitlist
+                </h2>
+                <p className="mt-2 text-[#676A5E] text-sm">
+                  You’re one step away from securing your spot for{' '}
+                  <span className="font-semibold">{selectedItem.title}</span>.
+                  Join now and be the first to taste our limited edition
+                  creation.
+                </p>
+
+                {/* Email Input */}
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-4 w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#676A5E]"
+                />
+
+                {/* Join Waitlist Button */}
+                <button
+                  onClick={() => {
+                    console.log('Joining waitlist for', selectedItem.title, 'with:', email);
+                    setShowWaitlist(false);
+                  }}
+                  className="mt-4 w-full bg-[#676A5E] text-white rounded-full py-2 text-sm hover:opacity-90"
+                >
+                  Join Waitlist
+                </button>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowWaitlist(false)}
+                  className="mt-4 text-xs text-gray-500 hover:underline"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
-
-        <motion.div
-          ref={scrollRef}
-          className="flex gap-[60px] pr-[60px] cursor-grab active:cursor-grabbing select-none"
-          drag="x"
-          dragConstraints={{ left: -dragLimit, right: 0 }}
-          dragElastic={0.1}
-          dragTransition={{ bounceStiffness: 300, bounceDamping: 20 }}
-          onDragStart={(e) => {
-            const target = e.target as HTMLElement;
-            if (target.tagName === 'IMG') {
-              e.preventDefault();
-            }
-          }}
-        >
-          {items.map((item, idx) => (
-            <div key={idx} onDragStart={(e) => e.preventDefault()}>
-              <TICard {...item} />
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    </div>
+      </AnimatePresence>
+    </>
   );
 };
 

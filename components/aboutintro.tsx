@@ -88,13 +88,6 @@ const Signature = () => {
             </div>
           ))}
         </div>
-
-        {/* Button + Customers */}
-        <div className="flex items-center justify-start w-full max-w-full md:max-w-[800px]">
-          <button className="px-5 py-2.5 bg-black text-white rounded-full hover:opacity-90 transition text-xs sm:text-sm">
-            More Details →
-          </button>
-        </div>
       </div>
 
       {/* Right Image with scroll effect */}
