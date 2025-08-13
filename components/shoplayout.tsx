@@ -299,7 +299,7 @@ export default function ShopLayout() {
                 />
                 <button
                   onClick={submitWaitlist}
-                  className="mt-4 w-full bg-black text-white py-2 rounded-md hover:opacity-90 transition"
+                  className="mt-4 w-full bg-[#676A5E] text-white py-2 rounded-md hover:opacity-90 transition"
                   disabled={loading}
                 >
                   {loading ? 'Joining...' : 'Join Waitlist'}
