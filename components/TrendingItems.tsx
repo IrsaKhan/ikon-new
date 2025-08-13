@@ -60,6 +60,8 @@ const TrendingItems = () => {
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [selectedItem, setSelectedItem] = useState<TICardProps | null>(null);
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<null | { type: 'success' | 'error'; message: string }>(null);
 
   const isTouchDevice =
     typeof window !== 'undefined' && 'ontouchstart' in window;
@@ -108,7 +110,6 @@ const TrendingItems = () => {
       return;
     }
 
-    // Simple email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert('Please enter a valid email');
@@ -120,31 +121,44 @@ const TrendingItems = () => {
       return;
     }
 
+    setLoading(true);
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          product_id: selectedItem.title, // corrected key
+          product_id: selectedItem.title,
         }),
       });
 
       const data = await res.json();
 
       if (data.ok) {
-        alert('✅ You have joined the waitlist!');
+        setNotification({ type: 'success', message: '✅ You have joined the waitlist!' });
       } else {
-        alert(`❌ There was a problem: ${data.error || 'Please try again.'}`);
+        setNotification({ type: 'error', message: `❌ There was a problem: ${data.error || 'Please try again.'}` });
       }
     } catch (err) {
       console.error(err);
-      alert('❌ Network error — please try again.');
+      setNotification({ type: 'error', message: '❌ Network error — please try again.' });
+    } finally {
+      setLoading(false);
+      setShowWaitlist(false);
+      setEmail('');
     }
-
-    setShowWaitlist(false);
-    setEmail('');
   };
+
+  // Auto-dismiss notification after 3 seconds
+  useEffect(() => {
+    if (!notification) return;
+
+    const timer = setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [notification]);
 
   return (
     <>
@@ -267,8 +281,9 @@ const TrendingItems = () => {
                 <button
                   onClick={submitWaitlist}
                   className="mt-4 w-full bg-black text-white py-2 rounded-md hover:opacity-90 transition"
+                  disabled={loading}
                 >
-                  Join Waitlist
+                  {loading ? 'Joining...' : 'Join Waitlist'}
                 </button>
                 <button
                   onClick={() => setShowWaitlist(false)}
@@ -278,6 +293,23 @@ const TrendingItems = () => {
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-md text-white z-50 ${
+              notification.type === 'success' ? 'bg-[#676A5E]' : 'bg-red-600'
+            } shadow-lg`}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.3 }}
+          >
+            {notification.message}
           </motion.div>
         )}
       </AnimatePresence>

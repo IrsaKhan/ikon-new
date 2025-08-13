@@ -53,10 +53,14 @@ const products = [
 export default function ShopLayout() {
   const [isMobile, setIsMobile] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [priceFilter, setPriceFilter] = useState(60); // <-- Added this state
+
+  // Waitlist states
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [selectedItem, setSelectedItem] = useState<typeof products[0] | null>(null);
   const [email, setEmail] = useState('');
-  const [priceFilter, setPriceFilter] = useState(60);
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<null | { type: 'success' | 'error'; message: string }>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -76,6 +80,54 @@ export default function ShopLayout() {
     setSelectedItem(item);
     setShowWaitlist(true);
   };
+
+  const submitWaitlist = async () => {
+    if (!email) {
+      alert('Please enter your email');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email');
+      return;
+    }
+    if (!selectedItem) {
+      alert('No product selected.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          product_id: selectedItem.title, // replace with id if available
+        }),
+      });
+
+      const data = await res.json();
+      if (data.ok) {
+        setNotification({ type: 'success', message: '✅ You have joined the waitlist!' });
+      } else {
+        setNotification({ type: 'error', message: `❌ ${data.error || 'Please try again.'}` });
+      }
+    } catch {
+      setNotification({ type: 'error', message: '❌ Network error — please try again.' });
+    } finally {
+      setLoading(false);
+      setShowWaitlist(false);
+      setEmail('');
+    }
+  };
+
+  // Auto-dismiss notification
+  useEffect(() => {
+    if (!notification) return;
+    const timer = setTimeout(() => setNotification(null), 3000);
+    return () => clearTimeout(timer);
+  }, [notification]);
 
   return (
     <>
@@ -102,9 +154,7 @@ export default function ShopLayout() {
 
           {/* Filter by Price */}
           <div>
-            <p
-              className={`${archivo.className} text-xs text-[#676A5E] uppercase tracking-[0.2em] mb-2`}
-            >
+            <p className={`${archivo.className} text-xs text-[#676A5E] uppercase tracking-[0.2em] mb-2`}>
               Filter By Price
             </p>
             <input
@@ -158,15 +208,9 @@ export default function ShopLayout() {
 
         {/* RIGHT PRODUCT GRID */}
         <div className="flex-1 lg:pr-[50px]">
-          <div className="flex justify-between items-center mb-8">
-            <p className="text-sm text-[#676A5E]">Showing 1–6 of 6 results</p>
-          </div>
-
-          {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-x-2 lg:gap-y-16">
             {products.map((p, i) => {
               const isActive = activeIndex === i;
-
               return (
                 <div
                   key={i}
@@ -181,9 +225,7 @@ export default function ShopLayout() {
                       fill
                       className={`object-cover transition-opacity duration-300 ${
                         isMobile
-                          ? isActive
-                            ? 'opacity-0'
-                            : 'opacity-100'
+                          ? isActive ? 'opacity-0' : 'opacity-100'
                           : 'group-hover:opacity-0'
                       }`}
                     />
@@ -194,21 +236,16 @@ export default function ShopLayout() {
                       fill
                       className={`object-cover transition-opacity duration-300 ${
                         isMobile
-                          ? isActive
-                            ? 'opacity-100'
-                            : 'opacity-0'
+                          ? isActive ? 'opacity-100' : 'opacity-0'
                           : 'opacity-0 group-hover:opacity-100'
                       }`}
                     />
-
                     {/* Join Waitlist button */}
                     <div
                       onClick={(e) => handleJoinWaitlistClick(p, e)}
                       className={`absolute bottom-0 w-full text-center py-3 text-sm transform transition-transform duration-300 bg-white/80 backdrop-blur-md text-black font-medium cursor-pointer ${
                         isMobile
-                          ? isActive
-                            ? 'translate-y-0'
-                            : 'translate-y-full'
+                          ? isActive ? 'translate-y-0' : 'translate-y-full'
                           : 'translate-y-full group-hover:translate-y-0'
                       }`}
                     >
@@ -242,7 +279,6 @@ export default function ShopLayout() {
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              {/* Top Image */}
               <div className="w-full h-48 bg-gray-200 overflow-hidden relative">
                 <Image
                   src={selectedItem.img}
@@ -251,49 +287,48 @@ export default function ShopLayout() {
                   className="object-cover"
                 />
               </div>
-
-              {/* Message */}
               <div className="p-6 text-center">
-                <h2 className="text-2xl font-medium text-[#676A5E]">
-                  Welcome to the IKON Waitlist
-                </h2>
-                <p className="mt-2 text-[#676A5E] text-sm">
-                  You’re one step away from securing your spot for{' '}
-                  <span className="font-semibold">{selectedItem.title}</span>.
-                  Join now and be the first to taste our limited edition
-                  creation.
-                </p>
-
-                {/* Email Input */}
+                <h2 className="text-2xl font-medium text-[#676A5E]">Welcome to the IKON Waitlist</h2>
+                <p className="mt-2 text-[#676A5E]">Join the waitlist for <strong>{selectedItem.title}</strong></p>
                 <input
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-4 w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#676A5E]"
+                  className="mt-4 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
                 />
-
-                {/* Join Waitlist Button */}
                 <button
-                  onClick={() => {
-                    console.log('Joining waitlist for', selectedItem.title, 'with:', email);
-                    setShowWaitlist(false);
-                    setEmail('');
-                  }}
-                  className="mt-4 w-full bg-[#676A5E] text-white rounded-full py-2 text-sm hover:opacity-90"
+                  onClick={submitWaitlist}
+                  className="mt-4 w-full bg-black text-white py-2 rounded-md hover:opacity-90 transition"
+                  disabled={loading}
                 >
-                  Join Waitlist
+                  {loading ? 'Joining...' : 'Join Waitlist'}
                 </button>
-
-                {/* Close Button */}
                 <button
                   onClick={() => setShowWaitlist(false)}
-                  className="mt-4 text-xs text-gray-500 hover:underline"
+                  className="mt-2 w-full border border-gray-300 py-2 rounded-md hover:bg-gray-100 transition"
                 >
-                  Close
+                  Cancel
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-md text-white z-50 ${
+              notification.type === 'success' ? 'bg-[#676A5E]' : 'bg-red-600'
+            } shadow-lg`}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.3 }}
+          >
+            {notification.message}
           </motion.div>
         )}
       </AnimatePresence>
