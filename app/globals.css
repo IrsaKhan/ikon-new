@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
+/* Apply Tenor Sans globally */
 body {
-  font-family: var(--font-tenor-sans), system-ui, sans-serif;
+  font-family: 'Tenor Sans', system-ui, sans-serif;
 }
 
 /* Hide scrollbars */
@@ -13,15 +14,15 @@ body {
   scrollbar-width: none;
 }
 
-/* 🔒 Disable text selection globally */
+/* Disable text selection globally */
 * {
   user-select: none;
-  -webkit-user-select: none; /* Safari/Chrome */
-  -ms-user-select: none;     /* IE/Edge */
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
-/* 🔒 Disable tap highlight & callout on mobile */
+/* Disable tap highlight & callout on mobile */
 body {
-  -webkit-touch-callout: none; /* iOS Safari long-press menu */
+  -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
 }
