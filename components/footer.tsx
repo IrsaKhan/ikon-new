@@ -1,4 +1,3 @@
-// components/Footer.tsx
 'use client';
 
 import { useState } from 'react';
@@ -18,13 +17,34 @@ const tenorSans = Tenor_Sans({
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!email.trim()) return;
-    setSent(true);
-    setEmail(''); // clear the input
-    // You can add actual send logic here
-    setTimeout(() => setSent(false), 3000);
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/community', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setSent(true);
+        setEmail('');
+        setTimeout(() => setSent(false), 3000);
+      } else {
+        console.error('Error joining community:', data);
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,11 +67,15 @@ export default function Footer() {
           />
           <button
             onClick={handleSend}
-            disabled={!email.trim() || sent}
+            disabled={!email.trim() || sent || loading}
             className={`px-6 py-3 rounded-full text-sm transition 
               ${sent ? 'bg-[#676A5E] text-white' : 'bg-black text-white hover:opacity-90'}`}
           >
-            {sent ? 'Sent ✓' : 'Send Message →'}
+            {loading
+              ? 'Sending...'
+              : sent
+              ? 'Sent ✓'
+              : 'Send Message →'}
           </button>
         </div>
 
