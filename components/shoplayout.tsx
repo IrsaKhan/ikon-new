@@ -289,7 +289,12 @@ export default function ShopLayout() {
               </div>
               <div className="p-6 text-center">
                 <h2 className="text-2xl font-medium text-[#676A5E]">Welcome to the IKON Waitlist</h2>
-                <p className="mt-2 text-[#676A5E]">Join the waitlist for <strong>{selectedItem.title}</strong></p>
+                <p className="mt-2 text-[#676A5E] text-sm">
+                  You’re one step away from securing your spot for{' '}
+                  <span className="font-semibold">{selectedItem.title}</span>.
+                  Join now and be the first to taste our limited edition
+                  creation.
+                </p>
                 <input
                   type="email"
                   placeholder="Enter your email"

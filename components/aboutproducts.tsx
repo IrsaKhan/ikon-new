@@ -60,6 +60,8 @@ const TrendingItems = () => {
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [selectedItem, setSelectedItem] = useState<TICardProps | null>(null);
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState<null | { type: 'success' | 'error'; message: string }>(null);
 
   const isTouchDevice =
     typeof window !== 'undefined' && 'ontouchstart' in window;
@@ -101,6 +103,62 @@ const TrendingItems = () => {
     setSelectedItem(item);
     setShowWaitlist(true);
   };
+
+  const submitWaitlist = async () => {
+    if (!email) {
+      alert('Please enter your email');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email');
+      return;
+    }
+
+    if (!selectedItem) {
+      alert('No product selected.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          product_id: selectedItem.title,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        setNotification({ type: 'success', message: '✅ You have joined the waitlist!' });
+      } else {
+        setNotification({ type: 'error', message: `❌ There was a problem: ${data.error || 'Please try again.'}` });
+      }
+    } catch (err) {
+      console.error(err);
+      setNotification({ type: 'error', message: '❌ Network error — please try again.' });
+    } finally {
+      setLoading(false);
+      setShowWaitlist(false);
+      setEmail('');
+    }
+  };
+
+  // Auto-dismiss notification after 3 seconds
+  useEffect(() => {
+    if (!notification) return;
+
+    const timer = setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [notification]);
 
   return (
     <>
@@ -210,42 +268,51 @@ const TrendingItems = () => {
                 <h2 className="text-2xl font-medium text-[#676A5E]">
                   Welcome to the IKON Waitlist
                 </h2>
-                <p className="mt-2 text-[#676A5E] text-sm">
+                 <p className="mt-2 text-[#676A5E] text-sm">
                   You’re one step away from securing your spot for{' '}
                   <span className="font-semibold">{selectedItem.title}</span>.
                   Join now and be the first to taste our limited edition
                   creation.
                 </p>
-
-                {/* Email Input */}
                 <input
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-4 w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#676A5E]"
+                  className="mt-4 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
                 />
-
-                {/* Join Waitlist Button */}
                 <button
-                  onClick={() => {
-                    console.log('Joining waitlist for', selectedItem.title, 'with:', email);
-                    setShowWaitlist(false);
-                  }}
-                  className="mt-4 w-full bg-[#676A5E] text-white rounded-full py-2 text-sm hover:opacity-90"
+                  onClick={submitWaitlist}
+                  className="mt-4 w-full bg-[#676A5E] text-white py-2 rounded-md hover:opacity-90 transition"
+                  disabled={loading}
                 >
-                  Join Waitlist
+                  {loading ? 'Joining...' : 'Join Waitlist'}
                 </button>
-
-                {/* Close Button */}
                 <button
                   onClick={() => setShowWaitlist(false)}
-                  className="mt-4 text-xs text-gray-500 hover:underline"
+                  className="mt-2 w-full border border-gray-300 py-2 rounded-md hover:bg-gray-100 transition"
                 >
-                  Close
+                  Cancel
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Notification Toast */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-md text-white z-50 ${
+              notification.type === 'success' ? 'bg-[#676A5E]' : 'bg-red-600'
+            } shadow-lg`}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.3 }}
+          >
+            {notification.message}
           </motion.div>
         )}
       </AnimatePresence>
